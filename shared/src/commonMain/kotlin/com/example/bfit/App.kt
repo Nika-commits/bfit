@@ -1,39 +1,25 @@
 package com.example.bfit
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material3.Button
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.resources.painterResource
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
-import androidx.savedstate.compose.serialization.serializers.SnapshotStateMapSerializer
-import bfit.shared.generated.resources.Res
-import bfit.shared.generated.resources.compose_multiplatform
 import com.example.bfit.navigation.HomeRoute
 import com.example.bfit.navigation.ProfileRoute
 import com.example.bfit.navigation.Route
@@ -47,7 +33,7 @@ import com.example.bfit.screens.workouts.WorkoutScreen
 @Composable
 fun App() {
     MaterialTheme {
-        val backStack: MutableList<Route> = rememberSerializable(serializer = SnapshotStateListSerializer()){
+        val backStack: MutableList<Route> = rememberSerializable(serializer = SnapshotStateListSerializer()) {
             mutableStateListOf(HomeRoute)
         }
 
@@ -60,13 +46,13 @@ fun App() {
                 backStack = backStack,
                 onBack = { backStack.removeLastOrNull() },
                 entryProvider = entryProvider {
-                    entry<HomeRoute>{
+                    entry<HomeRoute> {
                         HomeScreen()
                     }
                     entry<WorkoutRoute> {
                         WorkoutScreen()
                     }
-                    entry<ProfileRoute>{
+                    entry<ProfileRoute> {
                         ProfileScreen()
                     }
                 }
@@ -76,24 +62,38 @@ fun App() {
 }
 
 
-
-
 @Composable
 fun BottomNavigationBar(
     topLevelRoutes: List<TopLevelRoute>,
     backStack: MutableList<Route>
-){
-    var selectedRoute by remember{mutableStateOf<TopLevelRoute>(HomeRoute)}
-    NavigationBar (
+) {
+    var selectedRoute = backStack.lastOrNull { it is TopLevelRoute } as? TopLevelRoute ?: HomeRoute
+
+    NavigationBar(
         windowInsets = NavigationBarDefaults.windowInsets
-    ){
+    ) {
         topLevelRoutes.forEach { route ->
             NavigationBarItem(
                 icon = {
-                    Icon(
-                        imageVector = route.icon,
-                        contentDescription = route.contentDescription
-                    )
+                    AnimatedContent(
+                        targetState = route == selectedRoute,
+                        transitionSpec = {
+                            (fadeIn(tween(200)) + scaleIn(
+                                initialScale = 0.8f,
+                                animationSpec = tween(200)
+                            )) togetherWith
+                                    (fadeOut(tween(150)) + scaleOut(
+                                        targetScale = 0.8f,
+                                        animationSpec = tween(150)
+                                    ))
+                        },
+                        label = "NavigationIcon"
+                    ) { isSelected ->
+                        Icon(
+                            imageVector = if (isSelected) route.activeIcon else route.icon,
+                            contentDescription = route.contentDescription
+                        )
+                    }
                 },
                 label = {
                     Text(
@@ -102,10 +102,12 @@ fun BottomNavigationBar(
                 },
                 selected = route == selectedRoute,
                 onClick = {
+                    if (selectedRoute == route) return@NavigationBarItem
                     selectedRoute = route
+                    backStack.remove(route)
                     backStack.add(route)
-                }
+                },
             )
         }
-        }
+    }
 }
