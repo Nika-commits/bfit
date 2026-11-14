@@ -1,59 +1,75 @@
 package com.example.bfit
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.togetherWith
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.saveable.rememberSerializable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
-import com.example.bfit.navigation.HomeRoute
-import com.example.bfit.navigation.ProfileRoute
+import com.example.bfit.navigation.BottomNavigationBar
 import com.example.bfit.navigation.Route
-import com.example.bfit.navigation.TopLevelRoute
-import com.example.bfit.navigation.TopLevelRoutes
-import com.example.bfit.navigation.WorkoutRoute
+import com.example.bfit.navigation.navigationConfig
 import com.example.bfit.screens.home.HomeScreen
 import com.example.bfit.screens.profile.ProfileScreen
 import com.example.bfit.screens.workouts.WorkoutScreen
+import com.example.bfit.theme.AppTheme
 
 @Composable
 fun App() {
-    MaterialTheme {
-        val backStack: MutableList<Route> = rememberSerializable(serializer = SnapshotStateListSerializer()) {
-            mutableStateListOf(HomeRoute)
-        }
+    AppTheme {
+        val backStack = rememberNavBackStack(navigationConfig, Route.HomeRoute)
 
         Scaffold(
             bottomBar = {
-                BottomNavigationBar(topLevelRoutes = TopLevelRoutes, backStack = backStack)
+                BottomNavigationBar(
+                    modifier = Modifier,
+                    selectedKey = backStack.last(),
+                    onSelectKey = {
+                        if (it == Route.HomeRoute) {
+                            backStack.clear()
+                            backStack.add(it)
+                        }
+                        backStack.remove(it)
+                        backStack.add(it)
+                    }
+                )
             }
-        ) {
+        ) { innerPadding ->
             NavDisplay(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp),
+
                 backStack = backStack,
                 onBack = { backStack.removeLastOrNull() },
+                entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator()
+                ),
                 entryProvider = entryProvider {
-                    entry<HomeRoute> {
+                    entry<Route.HomeRoute> {
                         HomeScreen()
                     }
-                    entry<WorkoutRoute> {
+                    entry<Route.WorkoutRoute> {
                         WorkoutScreen()
                     }
-                    entry<ProfileRoute> {
+                    entry<Route.ProfileRoute> {
                         ProfileScreen()
+                    }
+                    entry<Route.Settings> {
+                        Box(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Text("Settings")
+                        }
                     }
                 }
             )
@@ -61,53 +77,3 @@ fun App() {
     }
 }
 
-
-@Composable
-fun BottomNavigationBar(
-    topLevelRoutes: List<TopLevelRoute>,
-    backStack: MutableList<Route>
-) {
-    var selectedRoute = backStack.lastOrNull { it is TopLevelRoute } as? TopLevelRoute ?: HomeRoute
-
-    NavigationBar(
-        windowInsets = NavigationBarDefaults.windowInsets
-    ) {
-        topLevelRoutes.forEach { route ->
-            NavigationBarItem(
-                icon = {
-                    AnimatedContent(
-                        targetState = route == selectedRoute,
-                        transitionSpec = {
-                            (fadeIn(tween(200)) + scaleIn(
-                                initialScale = 0.8f,
-                                animationSpec = tween(200)
-                            )) togetherWith
-                                    (fadeOut(tween(150)) + scaleOut(
-                                        targetScale = 0.8f,
-                                        animationSpec = tween(150)
-                                    ))
-                        },
-                        label = "NavigationIcon"
-                    ) { isSelected ->
-                        Icon(
-                            imageVector = if (isSelected) route.activeIcon else route.icon,
-                            contentDescription = route.contentDescription
-                        )
-                    }
-                },
-                label = {
-                    Text(
-                        route.label,
-                    )
-                },
-                selected = route == selectedRoute,
-                onClick = {
-                    if (selectedRoute == route) return@NavigationBarItem
-                    selectedRoute = route
-                    backStack.remove(route)
-                    backStack.add(route)
-                },
-            )
-        }
-    }
-}

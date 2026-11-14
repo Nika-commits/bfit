@@ -1,0 +1,41 @@
+package com.example.bfit.navigation
+
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.FitnessCenter
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.ui.graphics.vector.ImageVector
+
+data class BottomNavItem(
+    val icon: ImageVector,
+    val activeIcon: ImageVector,
+    val label: String
+)
+
+val TOP_LEVEL_DESTINATIONS = mapOf(
+    Route.HomeRoute to BottomNavItem(
+        icon = Icons.Outlined.Home,
+        activeIcon = Icons.Filled.Home,
+        label = "Home"
+    ),
+    Route.WorkoutRoute to BottomNavItem(
+        icon = Icons.Outlined.FitnessCenter,
+        activeIcon = Icons.Filled.FitnessCenter,
+        label = "My Workouts"
+    ),
+    Route.ProfileRoute to BottomNavItem(
+        icon = Icons.Outlined.Person,
+        activeIcon = Icons.Filled.Person,
+        label = "My Profile"
+    ),
+    Route.Settings to BottomNavItem(
+        icon = Icons.Outlined.Settings,
+        activeIcon = Icons.Filled.Settings,
+        label = "Settings"
+    )
+)
