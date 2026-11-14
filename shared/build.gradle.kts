@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.koin.compiler)
 }
 
 kotlin {
@@ -56,11 +57,19 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.androidx.navigation3.ui)
-            implementation(libs.androidx.navigation3.runtime)
-            implementation(libs.androidx.lifecycle.viewmodel.navigation3)
-            implementation(libs.androidx.material3.adaptive.navigation3)
+            implementation(libs.jetbrains.navigation3.ui)
+            implementation(libs.jetbrains.lifecycle.viewmodel.navigation3)
+            implementation(libs.jetbrains.material3.adaptive.navigation3)
             implementation(libs.kotlinx.serialization.core)
+            implementation(libs.compose.material.icons.core)
+
+            //coin
+            implementation(libs.koin.core)
+            implementation(libs.koin.annotations) // only with annotations
+
+            // Compose Multiplatform
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -70,5 +79,4 @@ kotlin {
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
-
 }
