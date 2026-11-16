@@ -1,65 +1,72 @@
 package com.example.bfit.screens.home
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material.icons.filled.MonitorWeight
+import androidx.compose.material.icons.filled.Payment
+import androidx.compose.material.icons.filled.SportsGymnastics
+import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material3.FloatingActionButtonMenu
+import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleFloatingActionButton
+import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.bfit.components.home.HomeAppBar
 
 @Composable
 fun HomeScreen() {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val listState = rememberLazyListState()
+    val showFab by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex == 0 || !listState.canScrollForward
+        }
+    }
+
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = !listState.isScrollInProgress,
-                enter = scaleIn() + fadeIn(),
-                exit = scaleOut() + fadeOut()
-            ) {
-
-                LogWorkoutFabButton {
-
-                }
-            }
+            LogWorkoutFabButton(
+                showFab = showFab,
+                onClick = {}
+            )
         },
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text("Home")
-                },
-                scrollBehavior = scrollBehavior
+            HomeAppBar(
+                "Pranish",
+                scrollBehaviour = scrollBehavior,
+                onCalendarClick = {},
+                onNotificationClick = {},
+                onProfileClick = {}
             )
         },
     ) { innerPadding ->
@@ -103,36 +110,63 @@ fun HomeScreen() {
 @Composable
 fun LogWorkoutFabButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    showFab: Boolean
 ) {
-    FloatingActionButton(
+    var fabMenuExpanded by rememberSaveable { mutableStateOf(false) }
+
+    val items = listOf(
+        FabMenuItems("Workout", Icons.Default.SportsGymnastics),
+        FabMenuItems("Gym Payment", Icons.Default.Payment),
+        FabMenuItems("Progress", Icons.Default.MonitorWeight),
+        FabMenuItems("Stopwatch", Icons.Default.Timer)
+    )
+
+    FloatingActionButtonMenu(
+        expanded = fabMenuExpanded,
         modifier = modifier,
-        onClick = onClick,
+        button = {
+            ToggleFloatingActionButton(
+                modifier = Modifier.animateFloatingActionButton(
+                    visible = showFab,
+                    alignment = Alignment.BottomEnd,
+                ),
+                checked = fabMenuExpanded,
+                onCheckedChange = { fabMenuExpanded = it }
+            ) {
+                Icon(
+                    modifier = Modifier.animateIcon(
+                        checkedProgress = { checkedProgress },
+                    ),
+                    imageVector = if (fabMenuExpanded) Icons.Outlined.Close else Icons.Outlined.Add,
+                    contentDescription = "Fab Button",
+                    tint = if (fabMenuExpanded) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        }
     ) {
-        Icon(
-            imageVector = Icons.Filled.Add,
-            contentDescription = "Log Workout"
-        )
+        items.forEach { item ->
+            FloatingActionButtonMenuItem(
+                onClick = {
+                    fabMenuExpanded = false
+                },
+                text = { Text(item.label) },
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.label
+                    )
+                }
+            )
+        }
     }
 }
 
-@Composable
-private fun LazyListState.isScrollingUp(): Boolean {
-    var previousIndex by remember(this) { mutableIntStateOf(firstVisibleItemIndex) }
-    var previousOffset by remember(this) { mutableIntStateOf(firstVisibleItemScrollOffset) }
-    return remember(this) {
-        derivedStateOf {
-            val scrollingUp = if (previousIndex != firstVisibleItemIndex) {
-                previousIndex > firstVisibleItemIndex
-            } else {
-                previousOffset >= firstVisibleItemScrollOffset
-            }
-            previousIndex = firstVisibleItemIndex
-            previousOffset = firstVisibleItemScrollOffset
-            scrollingUp
-        }
-    }.value
-}
+
+data class FabMenuItems(
+    val label: String,
+    val icon: ImageVector
+)
 
 @Preview(showBackground = true)
 @Composable

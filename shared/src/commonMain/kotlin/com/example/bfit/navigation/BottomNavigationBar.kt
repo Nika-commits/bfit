@@ -25,7 +25,7 @@ fun BottomNavigationBar(
 
     NavigationBar(
         modifier = modifier,
-        windowInsets = NavigationBarDefaults.windowInsets
+        windowInsets = NavigationBarDefaults.windowInsets,
     ) {
         TOP_LEVEL_DESTINATIONS.forEach { (route, routeInfo) ->
             NavigationBarItem(
@@ -33,17 +33,22 @@ fun BottomNavigationBar(
                 onClick = {
                     onSelectKey(route)
                 },
+                label = {
+                    Text(
+                        routeInfo.label,
+                    )
+                },
                 icon = {
                     AnimatedContent(
                         targetState = route == selectedKey,
                         transitionSpec = {
-                            (fadeIn(tween(200)) + scaleIn(
+                            (fadeIn(tween(300)) + scaleIn(
                                 initialScale = 0.8f,
                                 animationSpec = tween(200)
                             )) togetherWith
-                                    (fadeOut(tween(150)) + scaleOut(
+                                    (fadeOut(tween(300)) + scaleOut(
                                         targetScale = 0.8f,
-                                        animationSpec = tween(150)
+                                        animationSpec = tween(300)
                                     ))
                         },
                         label = "NavigationIcon"
@@ -53,11 +58,6 @@ fun BottomNavigationBar(
                             contentDescription = routeInfo.label
                         )
                     }
-                },
-                label = {
-                    Text(
-                        routeInfo.label,
-                    )
                 },
             )
         }
