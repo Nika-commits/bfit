@@ -23,7 +23,7 @@ import androidx.navigation3.runtime.NavKey
 @Composable
 fun BottomNavigationBar(
     selectedKey: NavKey,
-    onSelectKey: (NavKey) -> Unit
+    onSelectKey: (NavKey) -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
     Surface(

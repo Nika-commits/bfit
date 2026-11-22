@@ -1,8 +1,11 @@
 package com.example.bfit
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -24,8 +27,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
@@ -53,10 +60,31 @@ fun App() {
         val tabs = TOP_LEVEL_DESTINATIONS.keys.toList()
         var slideDirection by remember { mutableStateOf(SlideDirection.RIGHT) }
 
+        var bottomBarVisible by remember { mutableStateOf(true) }
+        val nestedScrollConnection = remember {
+            object : NestedScrollConnection {
+                override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+                    if (consumed.y < 0) {
+                        bottomBarVisible = false
+                    } else if (consumed.y > 0) {
+                        bottomBarVisible = true
+                    }
+                    return Offset.Zero
+                }
+            }
+        }
+
         Box(modifier = Modifier.fillMaxSize()) {
             Scaffold(
+                modifier = Modifier.nestedScroll(nestedScrollConnection),
                 bottomBar = {
-                    if (backStack.last() in TOP_LEVEL_DESTINATIONS) {
+//                    if (backStack.last() in TOP_LEVEL_DESTINATIONS) {
+                    AnimatedVisibility(
+                        visible = bottomBarVisible && backStack.last() in TOP_LEVEL_DESTINATIONS,
+                        enter = slideInVertically { it },
+                        exit = slideOutVertically { it }
+                    ) {
+
                         BottomNavigationBar(
                             selectedKey = backStack.last(),
                             onSelectKey = {
@@ -74,6 +102,7 @@ fun App() {
                             }
                         )
                     }
+//                    }
                 }
             ) { innerPadding ->
                 NavDisplay(
