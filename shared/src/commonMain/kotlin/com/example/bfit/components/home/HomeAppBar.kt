@@ -1,6 +1,5 @@
 package com.example.bfit.components.home
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.rounded.Cloud
+import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -26,8 +25,6 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.layout
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -35,7 +32,9 @@ import androidx.compose.ui.unit.dp
 fun HomeAppBar(
     username: String,
     scrollBehaviour: TopAppBarScrollBehavior? = null,
-    onProfileClick: () -> Unit
+    onNotificationClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onChangelogsClick: () -> Unit
 ) {
 
     val statusBarTopInset = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
@@ -59,11 +58,11 @@ fun HomeAppBar(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                         contentColor = MaterialTheme.colorScheme.onSurface
                     ),
-                    onClick = onProfileClick
+                    onClick = onNotificationClick
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Cloud,
-                        contentDescription = "Cloud"
+                        imageVector = Icons.Rounded.Notifications,
+                        contentDescription = "Notification"
                     )
                 }
                 FilledIconButton(
@@ -71,7 +70,7 @@ fun HomeAppBar(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                         contentColor = MaterialTheme.colorScheme.onSurface
                     ),
-                    onClick = onProfileClick
+                    onClick = onChangelogsClick
                 ) {
                     Icon(
                         imageVector = Icons.Default.Newspaper,
@@ -83,7 +82,7 @@ fun HomeAppBar(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                         contentColor = MaterialTheme.colorScheme.onSurface
                     ),
-                    onClick = onProfileClick
+                    onClick = onSettingsClick
                 ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
@@ -99,7 +98,7 @@ fun HomeAppBar(
 fun ProfilePill(
     username: String,
 
-){
+    ) {
     Surface(
         shape = CircleShape,
         color = MaterialTheme.colorScheme.secondaryContainer,
@@ -126,7 +125,7 @@ fun ProfilePill(
 
 @Preview(showBackground = true)
 @Composable
-fun ProfilePillPreview(){
+fun ProfilePillPreview() {
 
     ProfilePill(
         "Pranish"
@@ -138,6 +137,8 @@ fun ProfilePillPreview(){
 fun HomeAppBarPreview() {
     HomeAppBar(
         username = "Pranish",
-        onProfileClick = {},
+        onNotificationClick = {},
+        onSettingsClick = {},
+        onChangelogsClick = {}
     )
 }

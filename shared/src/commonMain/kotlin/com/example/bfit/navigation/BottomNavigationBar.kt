@@ -1,13 +1,17 @@
 package com.example.bfit.navigation
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 
 @Composable
@@ -15,23 +19,19 @@ fun BottomNavigationBar(
     selectedKey: NavKey,
     onSelectKey: (NavKey) -> Unit
 ) {
-
+    val haptic = LocalHapticFeedback.current
     NavigationBar(
-        modifier = Modifier,
+        modifier = Modifier
+            .padding(horizontal = 24.dp),
     ) {
         TOP_LEVEL_DESTINATIONS.forEach { (route, routeInfo) ->
             val isSelected = route == selectedKey
-            val scale by animateFloatAsState(
-                targetValue = if (isSelected) 1.05f else 1f,
-                animationSpec = spring(
-                    dampingRatio = 0.5f,
-                    stiffness = 400f
-                ),
-                label = "NavigationIconScale"
-            )
             NavigationBarItem(
                 selected = isSelected,
                 onClick = {
+                    haptic.performHapticFeedback(
+                        HapticFeedbackType.Confirm
+                    )
                     onSelectKey(route)
                 },
                 icon = {
@@ -40,8 +40,23 @@ fun BottomNavigationBar(
                         contentDescription = routeInfo.label
                     )
                 },
+                label = {
+                    Text(
+                        text = routeInfo.label,
+                        style = MaterialTheme.typography.labelSmallEmphasized
+                    )
+                }
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun BottomNavigationBarPreview() {
+    BottomNavigationBar(
+        selectedKey = Route.HomeRoute,
+        onSelectKey = {}
+    )
 }
 

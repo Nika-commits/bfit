@@ -1,5 +1,9 @@
 package com.example.bfit
 
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -10,11 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -28,13 +34,13 @@ import androidx.navigation3.ui.NavDisplay
 import com.example.bfit.navigation.BottomNavigationBar
 import com.example.bfit.navigation.BottomNavigationConfig
 import com.example.bfit.navigation.Route
+import com.example.bfit.navigation.TOP_LEVEL_DESTINATIONS
 import com.example.bfit.screens.home.HomeScreen
 import com.example.bfit.screens.profile.ProfileScreen
 import com.example.bfit.screens.progress.ProgressScreen
 import com.example.bfit.screens.workouts.WorkoutScreen
 import com.example.bfit.theme.AppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
     AppTheme {
@@ -43,15 +49,21 @@ fun App() {
             Route.HomeRoute
         )
 
+        val tabs = TOP_LEVEL_DESTINATIONS.keys.toList()
+        var slideDirection by remember { mutableStateOf(SlideDirection.RIGHT) }
+
         Box(modifier = Modifier.fillMaxSize()) {
             Scaffold(
                 bottomBar = {
                     BottomNavigationBar(
                         selectedKey = backStack.last(),
                         onSelectKey = {
+                            slideDirection = if (tabs.indexOf(it) > tabs.indexOf(backStack.last())) SlideDirection.RIGHT
+                            else SlideDirection.LEFT
+
                             if (it == Route.HomeRoute) {
                                 backStack.clear()
-                                backStack.add(it)
+                                backStack.add(Route.HomeRoute)
                             } else {
                                 backStack.remove(it)
                                 backStack.add(it)
@@ -66,15 +78,32 @@ fun App() {
                             bottom = innerPadding.calculateBottomPadding(),
                         )
                         .consumeWindowInsets(innerPadding),
+                    transitionSpec = { slide(slideDirection) },
+                    popTransitionSpec = { slide(slideDirection) },
+                    predictivePopTransitionSpec = {
+                        slide(SlideDirection.LEFT)
+                    },
                     backStack = backStack,
-                    onBack = { if (backStack.size > 1) backStack.removeLastOrNull() },
+                    onBack = {
+                        if (backStack.last() != Route.HomeRoute) {
+                            backStack.clear()
+                            backStack.add(Route.HomeRoute)
+                        }
+                    },
                     entryDecorators = listOf(
                         rememberSaveableStateHolderNavEntryDecorator(),
                         rememberViewModelStoreNavEntryDecorator()
                     ),
                     entryProvider = entryProvider {
                         entry<Route.HomeRoute> {
-                            HomeScreen()
+                            HomeScreen(
+                                onNavigateToSettings = {
+                                    slideDirection = SlideDirection.RIGHT
+                                    backStack.clear()
+                                    backStack.add(Route.HomeRoute)
+                                    backStack.add(Route.Settings)
+                                }
+                            )
                         }
                         entry<Route.WorkoutRoute> {
                             WorkoutScreen()
@@ -86,11 +115,7 @@ fun App() {
                             ProgressScreen()
                         }
                         entry<Route.Settings> {
-                            Box(
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                Text("Settings")
-                            }
+                            ProfileScreen()
                         }
                     }
                 )
@@ -102,6 +127,16 @@ fun App() {
     }
 }
 
+enum class SlideDirection {
+    RIGHT, LEFT
+}
+
+fun slide(direction: SlideDirection): ContentTransform {
+    return when (direction) {
+        SlideDirection.RIGHT -> slideInHorizontally { it } togetherWith slideOutHorizontally { -it }
+        SlideDirection.LEFT -> slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
+    }
+}
 
 @Composable
 private fun StatusBarProtection(

@@ -24,7 +24,9 @@ import com.example.bfit.components.home.HomeAppBar
 import com.example.bfit.components.home.LogWorkoutFabButton
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onNavigateToSettings: () -> Unit
+) {
     val listState = rememberLazyListState()
     val showFab by remember {
         derivedStateOf {
@@ -47,8 +49,10 @@ fun HomeScreen() {
         topBar = {
             HomeAppBar(
                 username = "Pranish",
-                onProfileClick = {},
-                scrollBehaviour = scrollBehavior
+                scrollBehaviour = scrollBehavior,
+                onChangelogsClick = {},
+                onSettingsClick = onNavigateToSettings,
+                onNotificationClick = {}
             )
         },
     ) { innerPadding ->
@@ -96,6 +100,8 @@ fun handleFabButtonCallback(option: FabMenus) {
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen(
+        onNavigateToSettings = {}
+    )
 }
 
