@@ -1,5 +1,9 @@
 package com.example.bfit.components.home
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Payment
@@ -47,14 +51,15 @@ fun LogWorkoutFabButton(
     var fabMenuExpanded by rememberSaveable { mutableStateOf(false) }
 
     FloatingActionButtonMenu(
-        modifier = Modifier.animateFloatingActionButton(
-            visible = visible,
-            alignment = Alignment.BottomEnd
-        ),
+        modifier = Modifier
+            .animateFloatingActionButton(
+                visible = visible,
+                alignment = Alignment.BottomEnd
+            )
+            .padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 64.dp),
         expanded = fabMenuExpanded,
         button = {
             ToggleFloatingActionButton(
-
                 containerSize = ToggleFloatingActionButtonDefaults.containerSize(64.dp),
                 checked = fabMenuExpanded,
                 onCheckedChange = { fabMenuExpanded = it }
