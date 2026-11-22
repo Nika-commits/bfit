@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.MaterialTheme
@@ -55,27 +56,30 @@ fun App() {
         Box(modifier = Modifier.fillMaxSize()) {
             Scaffold(
                 bottomBar = {
-                    BottomNavigationBar(
-                        selectedKey = backStack.last(),
-                        onSelectKey = {
-                            slideDirection = if (tabs.indexOf(it) > tabs.indexOf(backStack.last())) SlideDirection.RIGHT
-                            else SlideDirection.LEFT
+                    if (backStack.last() in TOP_LEVEL_DESTINATIONS) {
+                        BottomNavigationBar(
+                            selectedKey = backStack.last(),
+                            onSelectKey = {
+                                slideDirection =
+                                    if (tabs.indexOf(it) > tabs.indexOf(backStack.last())) SlideDirection.RIGHT
+                                    else SlideDirection.LEFT
 
-                            if (it == Route.HomeRoute) {
-                                backStack.clear()
-                                backStack.add(Route.HomeRoute)
-                            } else {
-                                backStack.remove(it)
-                                backStack.add(it)
+                                if (it == Route.HomeRoute) {
+                                    backStack.clear()
+                                    backStack.add(Route.HomeRoute)
+                                } else {
+                                    backStack.remove(it)
+                                    backStack.add(it)
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             ) { innerPadding ->
                 NavDisplay(
                     modifier = Modifier
                         .padding(
-                            bottom = innerPadding.calculateBottomPadding(),
+//                            bottom = innerPadding.calculateBottomPadding(),
                         )
                         .consumeWindowInsets(innerPadding),
                     transitionSpec = { slide(slideDirection) },
@@ -99,8 +103,6 @@ fun App() {
                             HomeScreen(
                                 onNavigateToSettings = {
                                     slideDirection = SlideDirection.RIGHT
-                                    backStack.clear()
-                                    backStack.add(Route.HomeRoute)
                                     backStack.add(Route.Settings)
                                 }
                             )
@@ -122,6 +124,9 @@ fun App() {
             }
             StatusBarProtection(
                 modifier = Modifier.align(Alignment.TopCenter)
+            )
+            NavigationBarProtection(
+                modifier = Modifier.align(Alignment.BottomCenter)
             )
         }
     }
@@ -157,6 +162,31 @@ private fun StatusBarProtection(
                         color.copy(alpha = 1f),
                         color.copy(alpha = 0.5f),
                         Color.Transparent
+                    )
+                )
+            )
+    )
+}
+
+@Composable
+private fun NavigationBarProtection(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.surfaceContainer,
+) {
+    Spacer(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(
+                with(LocalDensity.current) {
+                    (WindowInsets.navigationBars.getBottom(this)).toDp()
+                }
+            )
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Transparent,
+                        color.copy(alpha = 0.5f),
+                        color.copy(alpha = 1f),
                     )
                 )
             )
