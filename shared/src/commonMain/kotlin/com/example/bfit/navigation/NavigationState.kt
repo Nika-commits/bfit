@@ -35,7 +35,7 @@ fun rememberNavigationState(
     val topLevelRoute = rememberSerializable(
         startRoute,
         topLevelRoutes,
-        configuration = navigationConfig,
+        configuration = BottomNavigationConfig,
         serializer = MutableStateSerializer(PolymorphicSerializer(NavKey::class))
     ) {
         mutableStateOf(startRoute)
@@ -43,7 +43,7 @@ fun rememberNavigationState(
 
     val backStacks = topLevelRoutes.associateWith { key ->
         rememberNavBackStack(
-            configuration = navigationConfig,
+            configuration = BottomNavigationConfig,
             key
         )
     }

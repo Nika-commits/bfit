@@ -1,65 +1,52 @@
 package com.example.bfit.navigation
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.togetherWith
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.navigation3.runtime.NavKey
 
 @Composable
 fun BottomNavigationBar(
-    modifier: Modifier = Modifier,
     selectedKey: NavKey,
     onSelectKey: (NavKey) -> Unit
 ) {
 
     NavigationBar(
-        modifier = modifier,
-        windowInsets = NavigationBarDefaults.windowInsets,
+        modifier = Modifier,
     ) {
         TOP_LEVEL_DESTINATIONS.forEach { (route, routeInfo) ->
+            val isSelected = route == selectedKey
+            val scale by animateFloatAsState(
+                targetValue = if (isSelected) 1.05f else 1f,
+                animationSpec = spring(
+                    dampingRatio = 0.5f,
+                    stiffness = 400f
+                ),
+                label = "NavigationIconScale"
+            )
             NavigationBarItem(
-                selected = route == selectedKey,
+                selected = isSelected,
                 onClick = {
                     onSelectKey(route)
                 },
-                label = {
-                    Text(
-                        routeInfo.label,
-                    )
-                },
                 icon = {
-                    AnimatedContent(
-                        targetState = route == selectedKey,
-                        transitionSpec = {
-                            (fadeIn(tween(300)) + scaleIn(
-                                initialScale = 0.8f,
-                                animationSpec = tween(200)
-                            )) togetherWith
-                                    (fadeOut(tween(300)) + scaleOut(
-                                        targetScale = 0.8f,
-                                        animationSpec = tween(300)
-                                    ))
+                    Icon(
+                        modifier = Modifier.graphicsLayer {
+                            scaleX = scale
+                            scaleY = scale
                         },
-                        label = "NavigationIcon"
-                    ) { isSelected ->
-                        Icon(
-                            imageVector = if (isSelected) routeInfo.activeIcon else routeInfo.icon,
-                            contentDescription = routeInfo.label
-                        )
-                    }
+                        imageVector = if (isSelected) routeInfo.activeIcon else routeInfo.icon,
+                        contentDescription = routeInfo.label
+                    )
                 },
             )
         }
     }
 }
+

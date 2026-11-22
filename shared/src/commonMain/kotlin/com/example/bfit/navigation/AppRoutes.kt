@@ -8,12 +8,14 @@ import kotlinx.serialization.modules.polymorphic
 
 @Serializable
 sealed interface Route : NavKey {
-
     @Serializable
     data object HomeRoute : Route
 
     @Serializable
     data object WorkoutRoute : Route
+
+    @Serializable
+    data object ProgressRoute : Route
 
     @Serializable
     data object ProfileRoute : Route
@@ -23,13 +25,12 @@ sealed interface Route : NavKey {
 }
 
 
-val navigationConfig = SavedStateConfiguration {
+val BottomNavigationConfig = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
             subclass(Route.HomeRoute::class, Route.HomeRoute.serializer())
+            subclass(Route.ProgressRoute::class, Route.ProgressRoute.serializer())
             subclass(Route.WorkoutRoute::class, Route.WorkoutRoute.serializer())
-            subclass(Route.ProfileRoute::class, Route.ProfileRoute.serializer())
-            subclass(Route.Settings::class, Route.Settings.serializer())
         }
     }
 }

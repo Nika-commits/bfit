@@ -1,15 +1,13 @@
 package com.example.bfit.screens.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemGesturesPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -18,7 +16,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,91 +25,73 @@ import com.example.bfit.components.home.LogWorkoutFabButton
 
 @Composable
 fun HomeScreen() {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val listState = rememberLazyListState()
     val showFab by remember {
         derivedStateOf {
             listState.firstVisibleItemIndex == 0 || !listState.canScrollForward
         }
     }
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         floatingActionButton = {
             LogWorkoutFabButton(
-                showFab = showFab,
-                onItemClick = { menu ->
-                    when (menu) {
-                        FabMenus.WORKOUT -> {
-
-                        }
-
-                        FabMenus.GYM_PAYMENT -> {
-
-                        }
-
-                        FabMenus.STOPWATCH -> {
-
-                        }
-
-                        FabMenus.PROGRESS -> {
-
-                        }
-                    }
-                }
+                visible = showFab,
+                onItemClick = ::handleFabButtonCallback
             )
         },
         topBar = {
             HomeAppBar(
-                "Pranish",
-                scrollBehaviour = scrollBehavior,
-                onCalendarClick = {},
-                onNotificationClick = {},
-                onProfileClick = {}
+                username = "Pranish",
+                onProfileClick = {},
+                scrollBehaviour = scrollBehavior
             )
         },
     ) { innerPadding ->
         LazyColumn(
-            state = listState,
+            contentPadding = PaddingValues(
+                top = innerPadding.calculateTopPadding(),
+
+                ),
             modifier = Modifier
-                .consumeWindowInsets(innerPadding)
-                .padding(horizontal = 8.dp),
-            contentPadding = innerPadding,
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .fillMaxWidth()
+                .systemGesturesPadding(),
+            state = listState,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
+            items(100) { index ->
                 Text(
-                    "Home",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .background(
-                            MaterialTheme.colorScheme.background,
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                        .padding(4.dp)
-                )
-            }
-            items((1..100).toList()) { item ->
-                Text(
-                    item.toString() + "1233333334566666666666",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            MaterialTheme.colorScheme.background,
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                        .padding(8.dp),
+                    text = (index + 1).toString(),
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
     }
 }
 
-data class FabMenuItems(
-    val label: String,
-    val icon: ImageVector
-)
+fun handleFabButtonCallback(option: FabMenus) {
+    when (option) {
+        FabMenus.WORKOUT -> {
+
+        }
+
+        FabMenus.GYM_PAYMENT -> {
+
+        }
+
+        FabMenus.STOPWATCH -> {
+
+        }
+
+        FabMenus.PROGRESS -> {
+
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

@@ -1,20 +1,33 @@
 package com.example.bfit.components.home
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.rounded.Cloud
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -22,63 +35,101 @@ import androidx.compose.ui.unit.dp
 fun HomeAppBar(
     username: String,
     scrollBehaviour: TopAppBarScrollBehavior? = null,
-    onCalendarClick: () -> Unit,
-    onNotificationClick: () -> Unit,
     onProfileClick: () -> Unit
 ) {
-    val density = LocalDensity.current
-    val layoutDirection = LocalLayoutDirection.current
-    val statusBars = WindowInsets.statusBars
 
-    val appBarInsets = WindowInsets(
-        left = statusBars.getLeft(density, layoutDirection),
-        top = statusBars.getTop(density) + with(density) { 12.dp.roundToPx() },
-        right = statusBars.getRight(density, layoutDirection),
-        bottom = statusBars.getBottom(density)
-    )
-
-    LargeTopAppBar(
-        windowInsets = appBarInsets,
+    val statusBarTopInset = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
+    TopAppBar(
+        contentPadding = PaddingValues(
+            top = statusBarTopInset,
+        ),
+        scrollBehavior = scrollBehaviour,
         title = {
-            Text(
-                "Hello, $username"
+            ProfilePill(
+                "Pranish"
             )
         },
         actions = {
-            IconButton(
-                onClick = {
-
-                }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(end = 14.dp)
             ) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Filled.CalendarMonth),
-                    contentDescription = username
-                )
-            }
-
-            IconButton(
-                onClick = {
-
+                FilledIconButton(
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    onClick = onProfileClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Cloud,
+                        contentDescription = "Cloud"
+                    )
                 }
-            ) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Filled.Notifications),
-                    contentDescription = "Notification Button"
-                )
-            }
-            IconButton(
-                onClick = {
-
+                FilledIconButton(
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    onClick = onProfileClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Newspaper,
+                        contentDescription = "Changelog"
+                    )
                 }
-            ) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Filled.Person),
-                    contentDescription = username
-                )
+                FilledIconButton(
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    onClick = onProfileClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Settings"
+                    )
+                }
             }
-
         },
-        scrollBehavior = scrollBehaviour
+    )
+}
+
+@Composable
+fun ProfilePill(
+    username: String,
+
+){
+    Surface(
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+
+            Text(
+                text = username,
+                style = MaterialTheme.typography.labelLarge
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfilePillPreview(){
+
+    ProfilePill(
+        "Pranish"
     )
 }
 
@@ -87,8 +138,6 @@ fun HomeAppBar(
 fun HomeAppBarPreview() {
     HomeAppBar(
         username = "Pranish",
-        onCalendarClick = {},
         onProfileClick = {},
-        onNotificationClick = {}
     )
 }
