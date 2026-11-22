@@ -8,7 +8,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.navigation3.runtime.NavKey
 
 @Composable
@@ -37,10 +36,6 @@ fun BottomNavigationBar(
                 },
                 icon = {
                     Icon(
-                        modifier = Modifier.graphicsLayer {
-                            scaleX = scale
-                            scaleY = scale
-                        },
                         imageVector = if (isSelected) routeInfo.activeIcon else routeInfo.icon,
                         contentDescription = routeInfo.label
                     )

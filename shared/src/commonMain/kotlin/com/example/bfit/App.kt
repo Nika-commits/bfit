@@ -30,6 +30,7 @@ import com.example.bfit.navigation.BottomNavigationConfig
 import com.example.bfit.navigation.Route
 import com.example.bfit.screens.home.HomeScreen
 import com.example.bfit.screens.profile.ProfileScreen
+import com.example.bfit.screens.progress.ProgressScreen
 import com.example.bfit.screens.workouts.WorkoutScreen
 import com.example.bfit.theme.AppTheme
 
@@ -80,6 +81,9 @@ fun App() {
                         }
                         entry<Route.ProfileRoute> {
                             ProfileScreen()
+                        }
+                        entry<Route.ProgressRoute> {
+                            ProgressScreen()
                         }
                         entry<Route.Settings> {
                             Box(
