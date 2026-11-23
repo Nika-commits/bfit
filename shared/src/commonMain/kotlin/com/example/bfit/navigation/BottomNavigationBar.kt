@@ -9,8 +9,10 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,78 +28,32 @@ fun BottomNavigationBar(
     onSelectKey: (NavKey) -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
-    Surface(
-        modifier = Modifier
-            .navigationBarsPadding()
-            .padding(horizontal = 34.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(34.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer,
-        tonalElevation = 4.dp
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp)
-                .selectableGroup(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TOP_LEVEL_DESTINATIONS.forEach { (route, routeInfo) ->
-                val isSelected = route == selectedKey
-                NavigationBarItem(
-                    selected = isSelected,
-                    onClick = {
-                        haptic.performHapticFeedback(
-                            HapticFeedbackType.Confirm
-                        )
-                        onSelectKey(route)
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = if (isSelected) routeInfo.activeIcon else routeInfo.icon,
-                            contentDescription = routeInfo.label
-                        )
-                    },
-//                label = {
-//                    Text(
-//                        text = routeInfo.label,
-//                        style = MaterialTheme.typography.labelSmallEmphasized
-//                    )
-//                }
-                )
-            }
+    NavigationBar{
+        TOP_LEVEL_DESTINATIONS.forEach { (route, routeInfo) ->
+            val isSelected = route == selectedKey
+            NavigationBarItem(
+                selected = isSelected,
+                onClick = {
+                    haptic.performHapticFeedback(
+                        HapticFeedbackType.Confirm
+                    )
+                    onSelectKey(route)
+                },
+                icon = {
+                    Icon(
+                        imageVector = if (isSelected) routeInfo.activeIcon else routeInfo.icon,
+                        contentDescription = routeInfo.label
+                    )
+                },
+                label = {
+                    Text(
+                        text = routeInfo.label,
+                        style = MaterialTheme.typography.labelSmallEmphasized
+                    )
+                }
+            )
         }
     }
-//    NavigationBar(
-//        modifier = Modifier
-//            .navigationBarsPadding()
-//            .padding(horizontal = 24.dp, vertical = 2.dp)
-//            .clip(RoundedCornerShape(32.dp)),
-//    ) {
-//        TOP_LEVEL_DESTINATIONS.forEach { (route, routeInfo) ->
-//            val isSelected = route == selectedKey
-//            NavigationBarItem(
-//                selected = isSelected,
-//                onClick = {
-//                    haptic.performHapticFeedback(
-//                        HapticFeedbackType.Confirm
-//                    )
-//                    onSelectKey(route)
-//                },
-//                icon = {
-//                    Icon(
-//                        imageVector = if (isSelected) routeInfo.activeIcon else routeInfo.icon,
-//                        contentDescription = routeInfo.label
-//                    )
-//                },
-////                label = {
-////                    Text(
-////                        text = routeInfo.label,
-////                        style = MaterialTheme.typography.labelSmallEmphasized
-////                    )
-////                }
-//            )
-//        }
-//    }
 }
 
 @Preview
