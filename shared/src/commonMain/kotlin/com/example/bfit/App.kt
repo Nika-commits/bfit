@@ -46,6 +46,7 @@ import com.example.bfit.navigation.TOP_LEVEL_DESTINATIONS
 import com.example.bfit.screens.home.HomeScreen
 import com.example.bfit.screens.profile.ProfileScreen
 import com.example.bfit.screens.progress.ProgressScreen
+import com.example.bfit.screens.settings.SettingsScreen
 import com.example.bfit.screens.workouts.WorkoutScreen
 import com.example.bfit.theme.AppTheme
 
@@ -111,8 +112,7 @@ fun App() {
 //                            bottom = innerPadding.calculateBottomPadding(),
                         )
                         .consumeWindowInsets(innerPadding),
-                    transitionSpec =
-                        { slide(slideDirection) },
+                    transitionSpec = { slide(slideDirection) },
                     popTransitionSpec = { slide(slideDirection) },
                     predictivePopTransitionSpec = {
                         slide(SlideDirection.LEFT)
@@ -131,6 +131,7 @@ fun App() {
                     entryProvider = entryProvider {
                         entry<Route.HomeRoute> {
                             HomeScreen(
+                                fabVisible = bottomBarVisible,
                                 onNavigateToSettings = {
                                     slideDirection = SlideDirection.RIGHT
                                     backStack.add(Route.Settings)
@@ -139,7 +140,7 @@ fun App() {
                                     slideDirection = SlideDirection.RIGHT
                                     backStack.add(Route.ProfileRoute)
                                 },
-                               onNavigateToNotifications = {}
+                                onNavigateToNotifications = {}
                             )
                         }
                         entry<Route.WorkoutRoute> {
@@ -152,7 +153,12 @@ fun App() {
                             ProgressScreen()
                         }
                         entry<Route.Settings> {
-                            ProfileScreen()
+                            SettingsScreen(
+                                onGoBack = {
+                                    slideDirection = SlideDirection.LEFT
+                                    backStack.removeLastOrNull()
+                                }
+                            )
                         }
                     }
                 )

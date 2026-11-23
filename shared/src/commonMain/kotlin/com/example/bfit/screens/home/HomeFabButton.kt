@@ -1,4 +1,4 @@
-package com.example.bfit.components.home
+package com.example.bfit.screens.home
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -113,7 +113,7 @@ fun LogWorkoutFabButton(
                     checked = fabMenuExpanded,
                     onCheckedChange = {
                         haptic.performHapticFeedback(
-                            if(fabMenuExpanded) HapticFeedbackType.ToggleOff else HapticFeedbackType.ToggleOn
+                            if (fabMenuExpanded) HapticFeedbackType.ToggleOff else HapticFeedbackType.ToggleOn
                         )
                         fabMenuExpanded = !fabMenuExpanded
                     }

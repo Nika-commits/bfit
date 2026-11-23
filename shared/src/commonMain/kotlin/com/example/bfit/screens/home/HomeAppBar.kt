@@ -1,6 +1,5 @@
-package com.example.bfit.components.home
+package com.example.bfit.screens.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -36,7 +35,7 @@ fun HomeAppBar(
     onNotificationClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onChangelogsClick: () -> Unit,
-    onProfileClick:() -> Unit,
+    onProfileClick: () -> Unit,
 ) {
 
     val statusBarTopInset = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()

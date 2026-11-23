@@ -12,9 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,16 +19,17 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun HomeScreen(
+    fabVisible: Boolean,
     onNavigateToSettings: () -> Unit,
     onNavigateToProfile: () -> Unit,
-    onNavigateToNotifications:() -> Unit
+    onNavigateToNotifications: () -> Unit
 ) {
     val listState = rememberLazyListState()
-    val showFab by remember {
-        derivedStateOf {
-            listState.firstVisibleItemIndex == 0 || !listState.canScrollForward
-        }
-    }
+//    val showFab by remember {
+//        derivedStateOf {
+//            listState.firstVisibleItemIndex == 0 || !listState.canScrollForward
+//        }
+//    }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
@@ -41,7 +39,7 @@ fun HomeScreen(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         floatingActionButton = {
             LogWorkoutFabButton(
-                visible = showFab,
+                visible = fabVisible,
                 onItemClick = ::handleFabButtonCallback
             )
         },
@@ -101,6 +99,7 @@ fun handleFabButtonCallback(option: FabMenus) {
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
+        fabVisible = true,
         onNavigateToSettings = {},
         onNavigateToProfile = {},
         onNavigateToNotifications = {}
