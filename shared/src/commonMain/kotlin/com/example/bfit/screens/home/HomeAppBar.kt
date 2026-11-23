@@ -1,5 +1,6 @@
 package com.example.bfit.components.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -34,7 +35,8 @@ fun HomeAppBar(
     scrollBehaviour: TopAppBarScrollBehavior? = null,
     onNotificationClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onChangelogsClick: () -> Unit
+    onChangelogsClick: () -> Unit,
+    onProfileClick:() -> Unit,
 ) {
 
     val statusBarTopInset = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
@@ -45,7 +47,8 @@ fun HomeAppBar(
         scrollBehavior = scrollBehaviour,
         title = {
             ProfilePill(
-                "Pranish"
+                username = username,
+                onClick = onProfileClick
             )
         },
         actions = {
@@ -97,9 +100,10 @@ fun HomeAppBar(
 @Composable
 fun ProfilePill(
     username: String,
-
-    ) {
+    onClick: () -> Unit
+) {
     Surface(
+        onClick = onClick,
         shape = CircleShape,
         color = MaterialTheme.colorScheme.secondaryContainer,
         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -126,10 +130,9 @@ fun ProfilePill(
 @Preview(showBackground = true)
 @Composable
 fun ProfilePillPreview() {
-
     ProfilePill(
         "Pranish"
-    )
+    ) {}
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -139,6 +142,7 @@ fun HomeAppBarPreview() {
         username = "Pranish",
         onNotificationClick = {},
         onSettingsClick = {},
-        onChangelogsClick = {}
+        onChangelogsClick = {},
+        onProfileClick = {}
     )
 }

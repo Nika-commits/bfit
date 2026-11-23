@@ -19,13 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.bfit.components.home.FabMenus
-import com.example.bfit.components.home.HomeAppBar
-import com.example.bfit.components.home.LogWorkoutFabButton
 
 @Composable
 fun HomeScreen(
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToProfile: () -> Unit,
+    onNavigateToNotifications:() -> Unit
 ) {
     val listState = rememberLazyListState()
     val showFab by remember {
@@ -52,7 +51,8 @@ fun HomeScreen(
                 scrollBehaviour = scrollBehavior,
                 onChangelogsClick = {},
                 onSettingsClick = onNavigateToSettings,
-                onNotificationClick = {}
+                onNotificationClick = onNavigateToNotifications,
+                onProfileClick = onNavigateToProfile
             )
         },
     ) { innerPadding ->
@@ -101,7 +101,9 @@ fun handleFabButtonCallback(option: FabMenus) {
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
-        onNavigateToSettings = {}
+        onNavigateToSettings = {},
+        onNavigateToProfile = {},
+        onNavigateToNotifications = {}
     )
 }
 

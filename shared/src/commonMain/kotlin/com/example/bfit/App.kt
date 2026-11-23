@@ -111,7 +111,8 @@ fun App() {
 //                            bottom = innerPadding.calculateBottomPadding(),
                         )
                         .consumeWindowInsets(innerPadding),
-                    transitionSpec = { slide(slideDirection) },
+                    transitionSpec =
+                        { slide(slideDirection) },
                     popTransitionSpec = { slide(slideDirection) },
                     predictivePopTransitionSpec = {
                         slide(SlideDirection.LEFT)
@@ -133,7 +134,12 @@ fun App() {
                                 onNavigateToSettings = {
                                     slideDirection = SlideDirection.RIGHT
                                     backStack.add(Route.Settings)
-                                }
+                                },
+                                onNavigateToProfile = {
+                                    slideDirection = SlideDirection.RIGHT
+                                    backStack.add(Route.ProfileRoute)
+                                },
+                               onNavigateToNotifications = {}
                             )
                         }
                         entry<Route.WorkoutRoute> {
