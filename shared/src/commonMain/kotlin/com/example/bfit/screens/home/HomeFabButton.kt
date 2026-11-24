@@ -42,7 +42,7 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -62,6 +62,7 @@ fun LogWorkoutFabButton(
     visible: Boolean
 ) {
     var fabMenuExpanded by rememberSaveable { mutableStateOf(false) }
+
 
     FloatingActionButtonMenu(
         modifier = Modifier
@@ -107,8 +108,7 @@ fun LogWorkoutFabButton(
                         finalColor = MaterialTheme.colorScheme.tertiary
                     ),
                     containerSize = ToggleFloatingActionButtonDefaults.containerSize(
-                        initialSize = 64.dp,
-                        finalSize = 64.dp
+                        58.dp, 58.dp
                     ),
                     checked = fabMenuExpanded,
                     onCheckedChange = {
@@ -151,7 +151,7 @@ fun LogWorkoutFabButton(
                     Text(
                         item.label,
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold
+                        style = MaterialTheme.typography.labelSmall
                     )
                 },
                 icon = {
@@ -165,3 +165,11 @@ fun LogWorkoutFabButton(
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun FabPreview() {
+    LogWorkoutFabButton(
+        visible = true,
+        onItemClick = {}
+    )
+}

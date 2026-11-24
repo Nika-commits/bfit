@@ -1,9 +1,9 @@
 package com.example.bfit.screens.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -21,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeAppBar(
     username: String,
@@ -39,10 +42,16 @@ fun HomeAppBar(
 ) {
 
     val statusBarTopInset = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
+    val windowInsets = TopAppBarDefaults.windowInsets.add(
+        WindowInsets(
+            top = statusBarTopInset
+        )
+    )
     TopAppBar(
-        contentPadding = PaddingValues(
-            top = statusBarTopInset,
-        ),
+        windowInsets = windowInsets,
+//        contentPadding = PaddingValues(
+//            top = statusBarTopInset,
+//        ),
         scrollBehavior = scrollBehaviour,
         title = {
             ProfilePill(
@@ -57,7 +66,7 @@ fun HomeAppBar(
             ) {
                 FilledIconButton(
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         contentColor = MaterialTheme.colorScheme.onSurface
                     ),
                     onClick = onNotificationClick
@@ -69,7 +78,7 @@ fun HomeAppBar(
                 }
                 FilledIconButton(
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         contentColor = MaterialTheme.colorScheme.onSurface
                     ),
                     onClick = onChangelogsClick
@@ -81,7 +90,7 @@ fun HomeAppBar(
                 }
                 FilledIconButton(
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         contentColor = MaterialTheme.colorScheme.onSurface
                     ),
                     onClick = onSettingsClick
@@ -134,6 +143,7 @@ fun ProfilePillPreview() {
     ) {}
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeAppBarPreview() {
