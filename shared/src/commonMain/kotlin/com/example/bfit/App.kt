@@ -187,7 +187,7 @@ fun slide(direction: SlideDirection): ContentTransform {
 @Composable
 private fun StatusBarProtection(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primaryContainer,
+    color: Color = MaterialTheme.colorScheme.surfaceContainer,
 ) {
     Spacer(
         modifier = modifier
@@ -201,7 +201,7 @@ private fun StatusBarProtection(
                 brush = Brush.verticalGradient(
                     colors = listOf(
                         color.copy(alpha = 1f),
-                        color.copy(alpha = 0.5f),
+                        color.copy(alpha = 0.7f),
                         Color.Transparent
                     )
                 )
@@ -212,7 +212,7 @@ private fun StatusBarProtection(
 @Composable
 private fun NavigationBarProtection(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primaryContainer,
+    color: Color = MaterialTheme.colorScheme.surfaceContainer,
 ) {
     Spacer(
         modifier = modifier

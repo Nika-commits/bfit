@@ -1,9 +1,9 @@
 package com.example.bfit.screens.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,16 +41,11 @@ fun HomeAppBar(
 ) {
 
     val statusBarTopInset = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
-    val windowInsets = TopAppBarDefaults.windowInsets.add(
-        WindowInsets(
-            top = statusBarTopInset
-        )
-    )
+
     TopAppBar(
-        windowInsets = windowInsets,
-//        contentPadding = PaddingValues(
-//            top = statusBarTopInset,
-//        ),
+        contentPadding = PaddingValues(
+            top = statusBarTopInset,
+        ),
         scrollBehavior = scrollBehaviour,
         title = {
             ProfilePill(
@@ -69,11 +63,11 @@ fun HomeAppBar(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         contentColor = MaterialTheme.colorScheme.onSurface
                     ),
-                    onClick = onNotificationClick
+                    onClick = onChangelogsClick
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Notifications,
-                        contentDescription = "Notification"
+                        imageVector = Icons.Default.Newspaper,
+                        contentDescription = "Changelog"
                     )
                 }
                 FilledIconButton(
@@ -81,11 +75,11 @@ fun HomeAppBar(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         contentColor = MaterialTheme.colorScheme.onSurface
                     ),
-                    onClick = onChangelogsClick
+                    onClick = onNotificationClick
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Newspaper,
-                        contentDescription = "Changelog"
+                        imageVector = Icons.Rounded.Notifications,
+                        contentDescription = "Notification"
                     )
                 }
                 FilledIconButton(
