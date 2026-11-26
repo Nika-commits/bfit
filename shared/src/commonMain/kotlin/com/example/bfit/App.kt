@@ -2,6 +2,7 @@ package com.example.bfit
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
@@ -34,6 +35,8 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -51,7 +54,9 @@ import com.example.bfit.screens.workouts.WorkoutScreen
 import com.example.bfit.theme.AppTheme
 
 @Composable
-fun App() {
+fun App(
+    preferences: DataStore<Preferences>
+) {
     AppTheme {
         val backStack = rememberNavBackStack(
             BottomNavigationConfig,
@@ -179,8 +184,8 @@ enum class SlideDirection {
 
 fun slide(direction: SlideDirection): ContentTransform {
     return when (direction) {
-        SlideDirection.RIGHT -> slideInHorizontally { it } togetherWith slideOutHorizontally { -it }
-        SlideDirection.LEFT -> slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
+        SlideDirection.RIGHT -> slideInHorizontally { it } togetherWith slideOutHorizontally { -it } + fadeOut()
+        SlideDirection.LEFT -> slideInHorizontally { -it } togetherWith slideOutHorizontally { it } + fadeOut()
     }
 }
 

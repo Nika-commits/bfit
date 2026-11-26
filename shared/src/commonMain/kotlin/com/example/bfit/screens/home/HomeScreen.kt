@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun HomeScreen(
@@ -65,10 +66,10 @@ fun HomeScreen(
             state = listState,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(100) { index ->
+            item {
                 Text(
-                    text = (index + 1).toString(),
-                    modifier = Modifier.fillMaxWidth()
+                    text = "0",
+                    fontSize = 50.sp
                 )
             }
         }

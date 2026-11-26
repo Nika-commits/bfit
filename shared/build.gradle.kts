@@ -79,8 +79,8 @@ kotlin {
             implementation(libs.androidx.sqlite.bundled)
 
             //datastore
-            implementation(libs.androidx.datastore.core)
-            implementation(libs.androidx.datastore.preferences.core)
+            api(libs.androidx.datastore.core)
+            api(libs.androidx.datastore.preferences.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
