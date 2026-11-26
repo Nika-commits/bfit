@@ -50,6 +50,8 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
             implementation(libs.androidx.room3.sqlite.wrapper)
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -66,11 +68,12 @@ kotlin {
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.compose.material.icons.extended)
 
-            //coin
-            implementation(libs.koin.core)
+            //koin
+            api(libs.koin.core)
             implementation(libs.koin.annotations) // only with annotations
+            implementation(libs.koin.compose.navigation)
 
-            // Compose Multiplatform
+            //Koin Compose Multiplatform
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 

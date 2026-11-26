@@ -2,6 +2,7 @@ package com.example.bfit
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
@@ -178,14 +179,12 @@ fun App(
     }
 }
 
-enum class SlideDirection {
-    RIGHT, LEFT
-}
+enum class SlideDirection { RIGHT, LEFT }
 
 fun slide(direction: SlideDirection): ContentTransform {
     return when (direction) {
-        SlideDirection.RIGHT -> slideInHorizontally { it } togetherWith slideOutHorizontally { -it } + fadeOut()
-        SlideDirection.LEFT -> slideInHorizontally { -it } togetherWith slideOutHorizontally { it } + fadeOut()
+        SlideDirection.RIGHT -> slideInHorizontally { it } + fadeIn() togetherWith slideOutHorizontally { -it } + fadeOut()
+        SlideDirection.LEFT -> slideInHorizontally { -it } + fadeIn() togetherWith slideOutHorizontally { it } + fadeOut()
     }
 }
 
