@@ -1,15 +1,13 @@
 package com.example.bfit
 
-import androidx.compose.runtime.remember
 import androidx.compose.ui.window.ComposeUIViewController
-import createDataStore
+import di.initKoin
 
-fun MainViewController() {
-    ComposeUIViewController {
-        App(
-            preferences = remember {
-                createDataStore()
-            }
-        )
+fun MainViewController() =
+    ComposeUIViewController(
+        configure = {
+            initKoin()
+        }
+    ) {
+        App()
     }
-}

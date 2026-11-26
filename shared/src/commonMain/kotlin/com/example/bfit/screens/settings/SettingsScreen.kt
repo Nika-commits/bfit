@@ -15,10 +15,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bfit.ui.components.SharedTopAppBar
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SettingsScreen(
     onGoBack: () -> Unit,
+    viewModel: SettingsViewModel = koinViewModel()
 ) {
     val listState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -42,8 +44,8 @@ fun SettingsScreen(
                 .systemGesturesPadding(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(200) { index ->
-                Text("$index")
+            item {
+                Text(viewModel.testText())
             }
         }
     }

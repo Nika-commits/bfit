@@ -1,4 +1,4 @@
-package com.example.utils
+package com.example.bfit.utils
 
 enum class UnitSystem { METRIC, IMPERIAL }
 

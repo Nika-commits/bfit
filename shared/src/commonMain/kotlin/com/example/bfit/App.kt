@@ -36,8 +36,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -55,9 +53,7 @@ import com.example.bfit.screens.workouts.WorkoutScreen
 import com.example.bfit.theme.AppTheme
 
 @Composable
-fun App(
-    preferences: DataStore<Preferences>
-) {
+fun App() {
     AppTheme {
         val backStack = rememberNavBackStack(
             BottomNavigationConfig,
